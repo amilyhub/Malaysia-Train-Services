@@ -1,0 +1,28 @@
+<form id="addTrainForm">
+    <input type="text" name="train_name" placeholder="Train Name" required>
+    <input type="text" name="departure_station" placeholder="Departure Station" required>
+    <input type="text" name="arrival_station" placeholder="Arrival Station" required>
+    <button type="submit">Add Train</button>
+</form>
+
+<script>
+document.getElementById('addTrainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('add_train.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            alert('Train added successfully!');
+            location.reload(); // Refresh list
+        } else {
+            alert('Error: ' + data.error);
+        }
+    });
+});
+</script>

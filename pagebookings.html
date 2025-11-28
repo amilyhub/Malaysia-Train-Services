@@ -1,0 +1,21 @@
+<div id="bookings-list">
+    <!-- Data bookings akan diisi di sini -->
+</div>
+
+<script>
+fetch('get_bookings.php')
+    .then(response => response.json())
+    .then(bookings => {
+        const bookingsList = document.getElementById('bookings-list');
+        bookings.forEach(booking => {
+            bookingsList.innerHTML += `
+                <div class="booking-item">
+                    <p>Booking ID: ${booking.id}</p>
+                    <p>Train: ${booking.train_id}</p>
+                    <p>Passenger: ${booking.passenger_name}</p>
+                    <!-- Tambah field lain mengikut keperluan -->
+                </div>
+            `;
+        });
+    });
+</script>

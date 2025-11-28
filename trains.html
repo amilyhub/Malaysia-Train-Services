@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Search - Malaysia Train Services</title>
+    <style>
+        :root {
+            --pastel-pink: #ffd6e7;       /* Soft pink */
+            --pastel-green: #d6f5e3;      /* Soft green */
+            --pink-accent: #ff85a2;       /* Pink untuk button & accent */
+            --green-accent: #7ecf9b;      /* Green untuk hover state */
+            --text-dark: #4a4a4a;         /* Text color */
+            --text-light: #888888;        /* Text secondary */
+            --border-light: #e8d4e0;      /* Border color */
+            --white: #ffffff;
+            --background: #fef7fa;        /* Light pink background */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-green) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            color: var(--text-light);
+        }
+
+        .search-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(255, 133, 162, 0.15);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+        }
+
+        .search-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 4px solid var(--pink-accent);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding-left: 8px;
+            border-left: 3px solid var(--pink-accent);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--pastel-pink);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--pink-accent);
+            box-shadow: 0 0 0 4px rgba(255, 133, 162, 0.1);
+            background-color: #fffdfe;
+        }
+
+        input::placeholder {
+            color: #c4a8b7;
+            font-style: italic;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 133, 162, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: var(--pink-accent);
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 133, 162, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--pink-accent);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            display: none;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(255, 133, 162, 0.15);
+            border: 1px solid var(--border-light);
+        }
+
+        .results-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 4px solid var(--green-accent);
+        }
+
+        .train-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--pink-accent);
+            border: 1px solid var(--border-light);
+        }
+
+        .train-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 133, 162, 0.15);
+            border-left-color: var(--green-accent);
+        }
+
+        .train-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .train-name {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .train-number {
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .train-route {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-green) 100%);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .station {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .station.from {
+            background: var(--pastel-pink);
+            border-radius: 8px 0 0 8px;
+            border-right: 2px dashed var(--pink-accent);
+        }
+
+        .station.to {
+            background: var(--pastel-green);
+            border-radius: 0 8px 8px 0;
+            border-left: 2px dashed var(--green-accent);
+        }
+
+        .station-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .station-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .arrow {
+            padding: 0 20px;
+            color: var(--pink-accent);
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .train-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detail {
+            text-align: center;
+            padding: 12px;
+            background: var(--background);
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .fare {
+            color: var(--pink-accent);
+        }
+
+        .seats-available {
+            color: var(--green-accent);
+        }
+
+        .seats-full {
+            color: var(--pink-accent);
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 133, 162, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            background: var(--background);
+            border-radius: 15px;
+            border: 2px dashed var(--border-light);
+        }
+
+        .no-results h3 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        /* Debug Info Styles */
+        .debug-info {
+            display: none;
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #ff85a2;
+            font-size: 14px;
+        }
+
+        .debug-info h4 {
+            color: var(--pink-accent);
+            margin-bottom: 8px;
+        }
+
+        .debug-content {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .toggle-debug {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .toggle-debug:hover {
+            background: #5a6268;
+        }
+
+        .performance-badge {
+            background: var(--green-accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .train-route {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                padding: 10px 0;
+            }
+            
+            .train-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚆 Malaysia Train Services</h1>
+            <p class="subtitle">Your Journey Begins With Us</p>
+        </header>
+
+        <!-- Debug Toggle -->
+        <button class="toggle-debug" onclick="toggleDebug()">Toggle Debug Info</button>
+        <div id="debugInfo" class="debug-info">
+            <h4>Debug Information</h4>
+            <div id="debugContent" class="debug-content">
+                Waiting for data...
+            </div>
+        </div>
+
+        <section class="search-section">
+            <h2>Search Trains</h2>
+            <form id="searchForm" class="search-form">
+                <div class="form-group">
+                    <label for="fromStation">From Station</label>
+                    <input type="text" id="fromStation" placeholder="Enter departure station" value="KL Sentral">
+                </div>
+                <div class="form-group">
+                    <label for="toStation">To Station</label>
+                    <input type="text" id="toStation" placeholder="Enter arrival station" value="Butterworth">
+                </div>
+                <div class="form-group">
+                    <label for="date">Travel Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                <button type="submit" class="btn-search">Search Trains</button>
+            </form>
+        </section>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Searching for available trains...</p>
+        </div>
+
+        <section id="resultsSection" class="results-section">
+            <h2>Available Trains <span id="performanceBadge" class="performance-badge" style="display: none;"></span></h2>
+            <div id="resultsContainer"></div>
+        </section>
+    </div>
+
+    <script>
+        // Debug functions
+        function showDebugInfo(info) {
+            const debugContent = document.getElementById('debugContent');
+            const timestamp = new Date().toLocaleTimeString();
+            debugContent.innerHTML = `[${timestamp}] ${info}\n` + debugContent.innerHTML;
+        }
+
+        function toggleDebug() {
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+        
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('date').value = tomorrow.toISOString().split('T')[0];
+
+        // Handle form submission
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            searchTrains();
+        });
+
+        // Auto-search on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            showDebugInfo('Page loaded, starting auto-search...');
+            searchTrains();
+        });
+
+        function searchTrains() {
+            const fromStation = document.getElementById('fromStation').value;
+            const toStation = document.getElementById('toStation').value;
+            const date = document.getElementById('date').value;
+
+            showDebugInfo(`🔍 Starting search: ${fromStation} → ${toStation} on ${date}`);
+            console.log('🔍 Searching trains...', { fromStation, toStation, date });
+            
+            // Show loading immediately
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('performanceBadge').style.display = 'none';
+
+            // Add cache busting
+            const timestamp = new Date().getTime();
+            const startTime = performance.now();
+            
+            showDebugInfo('📡 Fetching data from get_trains.php...');
+            
+            fetch(`get_trains.php?t=${timestamp}`)
+                .then(response => {
+                    const fetchTime = performance.now() - startTime;
+                    showDebugInfo(`✅ Response received in ${fetchTime.toFixed(2)}ms - Status: ${response.status}`);
+                    console.log('📡 Response status:', response.status);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const totalTime = performance.now() - startTime;
+                    showDebugInfo(`📊 API Response: ${data.success ? 'SUCCESS' : 'FAILED'}, ${data.data ? data.data.length : 0} trains, ${totalTime.toFixed(2)}ms total`);
+                    console.log('✅ API Response:', data);
+                    
+                    // Check if response is successful
+                    if (!data.success) {
+                        throw new Error(data.message || 'API request failed');
+                    }
+                    
+                    // Hide loading
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    // Show performance badge
+                    if (data.performance) {
+                        const perfBadge = document.getElementById('performanceBadge');
+                        perfBadge.textContent = `${data.performance.execution_time_ms}ms • ${data.performance.records_count} trains`;
+                        perfBadge.style.display = 'inline-block';
+                    }
+                    
+                    // Filter trains based on search
+                    const filteredTrains = data.data.filter(train => 
+                        train.source_station.toLowerCase().includes(fromStation.toLowerCase()) && 
+                        train.destination_station.toLowerCase().includes(toStation.toLowerCase())
+                    );
+                    
+                    showDebugInfo(`🎯 Filtered results: ${filteredTrains.length} trains matching criteria`);
+                    console.log(`🎯 Filtered results: ${filteredTrains.length} trains`);
+                    
+                    displayTrains(filteredTrains);
+                })
+                .catch(error => {
+                    const totalTime = performance.now() - startTime;
+                    showDebugInfo(`❌ ERROR: ${error.message} (${totalTime.toFixed(2)}ms)`);
+                    console.error('❌ Fetch error:', error);
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('resultsSection').style.display = 'block';
+                    document.getElementById('resultsContainer').innerHTML = `
+                        <div class="no-results">
+                            <h3>Error loading trains</h3>
+                            <p>${error.message}</p>
+                            <p>Please check your connection and try again.</p>
+                            <button onclick="searchTrains()" class="book-btn">Try Again</button>
+                        </div>
+                    `;
+                });
+        }
+
+        function displayTrains(trains) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            showDebugInfo(`🎨 Displaying ${trains.length} trains in UI`);
+            
+            if (trains.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <h3>No trains found</h3>
+                        <p>Try adjusting your search criteria</p>
+                        <button onclick="searchTrains()" class="book-btn">Search Again</button>
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = trains.map(train => `
+                    <div class="train-card">
+                        <div class="train-header">
+                            <div class="train-name">${train.train_name}</div>
+                            <div class="train-number">${train.train_number}</div>
+                        </div>
+                        
+                        <div class="train-route">
+                            <div class="station from">
+                                <div class="station-name">${train.source_station}</div>
+                                <div class="station-time">Dep: ${train.departure_time}</div>
+                            </div>
+                            <div class="arrow">→</div>
+                            <div class="station to">
+                                <div class="station-name">${train.destination_station}</div>
+                                <div class="station-time">Arr: ${train.arrival_time}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="train-details">
+                            <div class="detail">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">${calculateDuration(train.departure_time, train.arrival_time)}</div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Seats</div>
+                                <div class="detail-value ${train.available_seats < 50 ? 'seats-full' : 'seats-available'}">
+                                    ${train.available_seats}/${train.total_seats}
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Fare</div>
+                                <div class="detail-value fare">RM${train.fare}</div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">${train.status}</div>
+                            </div>
+                        </div>
+                        
+                        <button class="book-btn" onclick="bookTrain(${train.id})">
+                            Book Now
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            resultsSection.style.display = 'block';
+            showDebugInfo('✅ UI updated successfully');
+        }
+
+        function calculateDuration(departure, arrival) {
+            const depTime = new Date(`2000-01-01T${departure}`);
+            const arrTime = new Date(`2000-01-01T${arrival}`);
+            
+            if (arrTime < depTime) {
+                arrTime.setDate(arrTime.getDate() + 1);
+            }
+            
+            const diffMs = arrTime - depTime;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return `${diffHrs}h ${diffMins}m`;
+        }
+
+        function bookTrain(trainId) {
+            showDebugInfo(`📖 Booking initiated for train ID: ${trainId}`);
+            alert(`🎀 Booking train with ID: ${trainId}\nRedirecting to booking page...`);
+            // window.location.href = `book.html?trainId=${trainId}`;
+        }
+
+        // Initial debug info
+        showDebugInfo('🚆 Train Booking System Initialized');
+        showDebugInfo('✅ Backend: get_trains.php');
+        showDebugInfo('✅ Database: train_booking');
+    </script>
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Malaysia Train Services</title>
+    <style>
+        :root {
+            --pastel-pink: #ffd6e7;
+            --pastel-green: #d6f5e3;
+            --pink-accent: #ff85a2;
+            --green-accent: #7ecf9b;
+            --text-dark: #4a4a4a;
+            --text-light: #888888;
+            --border-light: #e8d4e0;
+            --white: #ffffff;
+            --background: #fef7fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-green) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(255, 133, 162, 0.15);
+            border: 1px solid var(--border-light);
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-green) 100%);
+            color: var(--text-dark);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+        }
+
+        .company-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .company-header h1 {
+            color: var(--text-dark);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .company-header .tagline {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--pink-accent);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .benefits-list {
+            margin-top: 30px;
+        }
+
+        .benefits-list h3 {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .benefit-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: var(--pink-accent);
+        }
+
+        .form-section {
+            padding: 50px;
+            background: var(--white);
+            position: relative;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .register-form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 14px;
+            padding-left: 8px;
+            border-left: 3px solid var(--pink-accent);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--pastel-pink);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--pink-accent);
+            box-shadow: 0 0 0 4px rgba(255, 133, 162, 0.1);
+            background-color: #fffdfe;
+        }
+
+        .form-control::placeholder {
+            color: #c4a8b7;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: var(--pastel-pink);
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .password-strength-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--green-accent);
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input {
+            margin-top: 3px;
+        }
+
+        .checkbox-group label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+            border: none;
+            padding: 0;
+        }
+
+        .checkbox-group a {
+            color: var(--pink-accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-group a:hover {
+            color: var(--green-accent);
+            text-decoration: underline;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--pink-accent) 0%, var(--green-accent) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 133, 162, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: var(--pink-accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            color: var(--green-accent);
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff6b8b;
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+            padding-left: 8px;
+        }
+
+        .form-control.error {
+            border-color: #ff6b8b;
+            background-color: #fff5f7;
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, var(--pastel-green) 0%, #e8f5e8 100%);
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid var(--green-accent);
+        }
+
+        .btn-register.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-section {
+                padding: 40px 30px;
+            }
+            
+            .form-section {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .company-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side - Info & Stats -->
+        <div class="info-section">
+            <div class="company-header">
+                <h1>Malaysia Train Services</h1>
+                <p class="tagline">Join Thousands of Happy Travelers</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">95%</span>
+                    <div class="stat-label">On-Time Performance</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <div class="stat-label">Destinations</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    <div class="stat-label">Years of Service</div>
+                </div>
+            </div>
+
+            <div class="benefits-list">
+                <h3>Why Join Us?</h3>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Exclusive discounts and promotions</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Priority booking for popular routes</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Personalized travel recommendations</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Easy ticket management and changes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Registration Form -->
+        <div class="form-section">
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Start your journey with us today</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                🎉 Registration successful! Redirecting to login...
+            </div>
+
+            <form class="register-form" id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="fullName" 
+                        name="fullName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                    <div class="error-message" id="nameError">Please enter your full name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        class="form-control" 
+                        id="email" 
+                        name="email"
+                        placeholder="Enter your email address"
+                        required
+                    >
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        class="form-control" 
+                        id="phone" 
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        required
+                    >
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password" 
+                        name="password"
+                        placeholder="Create a strong password"
+                        required
+                    >
+                    <div class="password-strength">
+                        <div class="password-strength-fill" id="passwordStrength"></div>
+                    </div>
+                    <div class="error-message" id="passwordError">Password must be at least 8 characters with letters and numbers</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="confirmPassword" 
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        required
+                    >
+                    <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-register">Create Account</button>
+
+                <div class="login-link">
+                    Already have an account? <a href="login.html">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthFill = document.getElementById('passwordStrength');
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+            
+            strengthFill.style.width = strength + '%';
+            strengthFill.style.background = strength < 50 ? '#ff6b8b' : strength < 75 ? '#ffa726' : '#7ecf9b';
+        });
+
+        // Form submission with PHP backend
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                terms: document.getElementById('terms').checked
+            };
+
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('error');
+            });
+
+            let isValid = true;
+
+            // Validation
+            if (!formData.fullName.trim()) {
+                showError('nameError', 'Please enter your full name');
+                isValid = false;
+            }
+
+            if (!validateEmail(formData.email)) {
+                showError('emailError', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (!validatePhone(formData.phone)) {
+                showError('phoneError', 'Please enter a valid phone number');
+                isValid = false;
+            }
+
+            if (!validatePassword(formData.password)) {
+                showError('passwordError', 'Password must be at least 8 characters with letters and numbers');
+                isValid = false;
+            }
+
+            if (formData.password !== formData.confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (!formData.terms) {
+                alert('Please accept the Terms of Service and Privacy Policy');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const registerBtn = document.querySelector('.btn-register');
+                registerBtn.textContent = '';
+                registerBtn.classList.add('loading');
+                registerBtn.disabled = true;
+
+                try {
+                    // PHP API call to backend
+                    const response = await registerWithBackend(formData);
+                    
+                    if (response.success) {
+                        // Show success message
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('registerForm').reset();
+                        
+                        // Redirect to login page after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        alert('Registration failed: ' + response.message);
+                    }
+                } catch (error) {
+                    alert('Registration failed: ' + error.message);
+                } finally {
+                    registerBtn.textContent = 'Create Account';
+                    registerBtn.classList.remove('loading');
+                    registerBtn.disabled = false;
+                }
+            }
+        });
+
+        // PHP Backend registration
+        async function registerWithBackend(formData) {
+            try {
+                const API_URL = 'register.php';
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        full_name: formData.fullName,
+                        email: formData.email,
+                        phone: formData.phone,
+                        password: formData.password,
+                        terms_accepted: true
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message);
+                }
+                
+                return data;
+                
+            } catch (error) {
+                throw new Error(error.message || 'Network error. Please try again.');
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.previousElementSibling.classList.add('error');
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^[\+]?[1-9][\d]{0,15}$/;
+            return re.test(phone.replace(/[\s\-\(\)]/g, ''));
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8 && /[A-Za-z]/.test(password) && /[0-9]/.test(password);
+        }
+
+        // Add interactive effects
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
